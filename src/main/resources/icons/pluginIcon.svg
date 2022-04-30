@@ -1,0 +1,18 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <ellipse transform="rotate(-4.657 18.2455 8.00098)" stroke="#000" fill="#fff" cx="18.24547" cy="8.00098" id="svg_22" rx="3.90013" ry="4.01597"/>
+  <ellipse stroke="#000" fill="#fff" cx="9.54416" cy="23.05537" id="svg_23" rx="4.70705" ry="4.6944"/>
+  <ellipse stroke="#000" fill="#fff" cx="22.41861" cy="31.50209" id="svg_24" rx="4.71338" ry="4.64672"/>
+  <ellipse stroke="#000" fill="#fff" cx="30.95048" cy="17.00865" id="svg_25" rx="4.08516" ry="4.31679"/>
+  <line fill="none" stroke="#000" x1="43.13329" y1="-6.19998" x2="43.13329" y2="-6.33331" id="svg_35"/>
+  <line fill="none" stroke="#000" x1="28.19998" y1="-5.26665" x2="28.06664" y2="-5.53332" id="svg_37"/>
+  <line id="svg_6" y2="28.90511" x2="18.83212" y1="25.25548" x1="13.57664" stroke="#000" fill="none"/>
+  <line id="svg_7" y2="19.12409" x2="10.65693" y1="10.51094" x1="15.03649" stroke="#000" fill="none"/>
+  <path stroke-dasharray="2,2" id="svg_8" d="m18.68613,12.40876l2.91971,14.74453" opacity="undefined" stroke="#000" fill="none"/>
+  <line id="svg_12" y2="17.81022" x2="26.86132" y1="21.16788" x1="13.57664" stroke="#000" fill="none"/>
+  <line id="svg_13" y2="14.0146" x2="28.46716" y1="9.05109" x1="22.0438" stroke="#000" fill="none"/>
+  <line id="svg_14" y2="27.44526" x2="25.10949" y1="20.43796" x1="29.48906" stroke="#000" fill="none"/>
+ </g>
+
+</svg>

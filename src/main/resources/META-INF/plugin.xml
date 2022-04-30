@@ -1,0 +1,23 @@
+<idea-plugin>
+    <id>org.github.duanxiaowen.V-Dependency</id>
+    <name>V-Dependency</name>
+    <vendor email="2636221659@qq.com" url="http://www.baidu.com">XiaoWen</vendor>
+
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+    <actions>
+        <action id="action.CallToolWindowAction" class="action.CallToolWindowAction"
+                text="Enable V-Dependency"
+                icon="V_DependencyIcons.App_icon_16">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
+        </action>
+
+
+    </actions>
+</idea-plugin>

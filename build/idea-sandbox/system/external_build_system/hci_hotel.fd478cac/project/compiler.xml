@@ -1,0 +1,7 @@
+<project>
+  <component name="ExternalCompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="HCI_Hotel" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

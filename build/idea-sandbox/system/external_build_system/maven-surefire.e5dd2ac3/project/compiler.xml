@@ -1,0 +1,32 @@
+<project>
+  <component name="ExternalCompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="common-java5" target="1.8" />
+      <module name="common-junit3" target="1.8" />
+      <module name="common-junit4" target="1.8" />
+      <module name="common-junit48" target="1.8" />
+      <module name="maven-failsafe-plugin" target="1.8" />
+      <module name="maven-surefire" target="1.8" />
+      <module name="maven-surefire-common" target="1.8" />
+      <module name="maven-surefire-plugin" target="1.8" />
+      <module name="maven-surefire-report-plugin" target="1.8" />
+      <module name="surefire-api" target="1.8" />
+      <module name="surefire-booter" target="1.8" />
+      <module name="surefire-extensions-api" target="1.8" />
+      <module name="surefire-extensions-spi" target="1.8" />
+      <module name="surefire-grouper" target="1.8" />
+      <module name="surefire-its" target="1.8" />
+      <module name="surefire-junit-platform" target="1.8" />
+      <module name="surefire-junit3" target="1.8" />
+      <module name="surefire-junit4" target="1.8" />
+      <module name="surefire-junit47" target="1.8" />
+      <module name="surefire-logger-api" target="1.8" />
+      <module name="surefire-providers" target="1.8" />
+      <module name="surefire-report-parser" target="1.8" />
+      <module name="surefire-shadefire" target="1.8" />
+      <module name="surefire-shared-utils" target="1.8" />
+      <module name="surefire-testng" target="1.8" />
+      <module name="surefire-testng-utils" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

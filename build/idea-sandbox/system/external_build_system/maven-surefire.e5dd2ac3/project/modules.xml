@@ -1,0 +1,32 @@
+<project>
+  <component name="ExternalProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/common-java5/common-java5.iml" filepath="$PROJECT_DIR$/surefire-providers/common-java5/common-java5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/common-junit3/common-junit3.iml" filepath="$PROJECT_DIR$/surefire-providers/common-junit3/common-junit3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/common-junit4/common-junit4.iml" filepath="$PROJECT_DIR$/surefire-providers/common-junit4/common-junit4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/common-junit48/common-junit48.iml" filepath="$PROJECT_DIR$/surefire-providers/common-junit48/common-junit48.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven-failsafe-plugin/maven-failsafe-plugin.iml" filepath="$PROJECT_DIR$/maven-failsafe-plugin/maven-failsafe-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/maven-surefire.iml" filepath="$PROJECT_DIR$/.idea/maven-surefire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven-surefire-common/maven-surefire-common.iml" filepath="$PROJECT_DIR$/maven-surefire-common/maven-surefire-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven-surefire-plugin/maven-surefire-plugin.iml" filepath="$PROJECT_DIR$/maven-surefire-plugin/maven-surefire-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven-surefire-report-plugin/maven-surefire-report-plugin.iml" filepath="$PROJECT_DIR$/maven-surefire-report-plugin/maven-surefire-report-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-api/surefire-api.iml" filepath="$PROJECT_DIR$/surefire-api/surefire-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-booter/surefire-booter.iml" filepath="$PROJECT_DIR$/surefire-booter/surefire-booter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-extensions-api/surefire-extensions-api.iml" filepath="$PROJECT_DIR$/surefire-extensions-api/surefire-extensions-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-extensions-spi/surefire-extensions-spi.iml" filepath="$PROJECT_DIR$/surefire-extensions-spi/surefire-extensions-spi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-grouper/surefire-grouper.iml" filepath="$PROJECT_DIR$/surefire-grouper/surefire-grouper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-its/surefire-its.iml" filepath="$PROJECT_DIR$/surefire-its/surefire-its.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-junit-platform/surefire-junit-platform.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-junit-platform/surefire-junit-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-junit3/surefire-junit3.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-junit3/surefire-junit3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-junit4/surefire-junit4.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-junit4/surefire-junit4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-junit47/surefire-junit47.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-junit47/surefire-junit47.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-logger-api/surefire-logger-api.iml" filepath="$PROJECT_DIR$/surefire-logger-api/surefire-logger-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-providers.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-providers.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-report-parser/surefire-report-parser.iml" filepath="$PROJECT_DIR$/surefire-report-parser/surefire-report-parser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-shadefire/surefire-shadefire.iml" filepath="$PROJECT_DIR$/surefire-shadefire/surefire-shadefire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-shared-utils/surefire-shared-utils.iml" filepath="$PROJECT_DIR$/surefire-shared-utils/surefire-shared-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-testng/surefire-testng.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-testng/surefire-testng.iml" />
+      <module fileurl="file://$PROJECT_DIR$/surefire-providers/surefire-testng-utils/surefire-testng-utils.iml" filepath="$PROJECT_DIR$/surefire-providers/surefire-testng-utils/surefire-testng-utils.iml" />
+    </modules>
+  </component>
+</project>
