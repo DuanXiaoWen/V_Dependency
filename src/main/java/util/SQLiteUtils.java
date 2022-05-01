@@ -1,8 +1,5 @@
 package util;
 
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.project.ProjectManager;
-
 import java.sql.*;
 
 public final  class SQLiteUtils {

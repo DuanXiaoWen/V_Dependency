@@ -1,7 +1,8 @@
 package toolWindow.entity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class Edge {
     String _id;
@@ -14,38 +15,36 @@ public class Edge {
         this._id = _id;
     }
 
-    public String getMethod1() {
-        return method1;
+    public Node getNodeA() {
+        return nodeA;
     }
 
-    public void setMethod1(String method1) {
-        this.method1 = method1;
+    public void setNodeA(Node nodeA) {
+        this.nodeA = nodeA;
     }
 
-    public String getMethod2() {
-        return method2;
+    public Node getNodeB() {
+        return nodeB;
     }
 
-    public void setMethod2(String method2) {
-        this.method2 = method2;
+    public void setNodeB(Node method2) {
+        this.nodeB = nodeB;
     }
 
-    public Map<String, Access> getAccessList() {
+    public List<Access> getAccessList() {
         return accessList;
     }
 
 
-    String method1;
-    String method2;
-    Map<String, Access> accessList;
+    Node nodeA;
+    Node nodeB;
+    List<Access> accessList;
 
-    public  void addSA(String key,Access access){
-        this.accessList.put(key, access);
+    public  void addSA(Access access){
+        this.accessList.add(access);
     }
 
     public Edge() {
-        this.method1 = "";
-        this.method2 = "";
-        this.accessList = new HashMap<>();
+        this.accessList = new LinkedList<>();
     }
 }

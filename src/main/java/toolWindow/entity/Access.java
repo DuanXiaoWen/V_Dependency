@@ -1,6 +1,16 @@
 package toolWindow.entity;
 
 public class Access {
+
+    public Access() {
+
+    }
+
+    public Access(String accessType, String classSignatureAndFieldName) {
+        this.accessType = accessType;
+        this.classSignatureAndFieldName = classSignatureAndFieldName;
+    }
+
     public String getClassSignatureAndFieldName() {
         return classSignatureAndFieldName;
     }

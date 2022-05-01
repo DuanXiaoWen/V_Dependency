@@ -6,6 +6,7 @@ import toolWindow.entity.Edge;
 import toolWindow.entity.Node;
 import util.SQLiteUtils;
 
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,9 +15,6 @@ import java.util.*;
 
 
 public class GraphDataMaker {
-
-
-
 
     private  Map<String, Map<String, String>> fieldDataGenerate(String dbPath) throws SQLException {
         Connection conn = SQLiteUtils.connectDB(dbPath);
@@ -148,15 +146,15 @@ public class GraphDataMaker {
                         s.append(nodeB.getAccessType()  == "Access" ? "r" : "w");
 
 
-                        edge.setMethod1(nodeA.getCaller());
-                        edge.setMethod2(nodeB.getCaller());
+                        edge.setNodeA(new Node(nodeA.getCaller()));
+                        edge.setNodeB(new Node(nodeB.getCaller()));
 
 
                         Access access = new Access();
                         access.setClassSignatureAndFieldName(key);
                         access.setAccessType(s.toString());
 
-                        edge.addSA(key, access);
+                        edge.addSA(access);
                         edges.put(edgeKey, edge);
                     }
                 }
@@ -178,11 +176,12 @@ public class GraphDataMaker {
         for(String key: edges.keySet()) {
             Edge edge = edges.get(key);
 
-            for(String accessKey: edge.getAccessList().keySet()) {
-                Access access = edge.getAccessList().get(accessKey);
+            for (Access access : edge.getAccessList()) {
                 String classField = access.getClassSignatureAndFieldName();
 
-                String sql = "INSERT INTO edge(methodA, methodB, accessType, classField) values (\'" + edge.getMethod1() + "\',\'" + edge.getMethod2()
+                String sql = "INSERT INTO edge(nodeA, nodeB, accessType, classField) values (\'"
+                        + edge.getNodeA().getClassNameAndMethodName()
+                        + "\',\'" + edge.getNodeB().getClassNameAndMethodName()
                         + "\',\'" + access.getAccessType() + "\',\'" + access.getClassSignatureAndFieldName() + "\'" +
                         ");";
                 stmt.executeUpdate(sql);
@@ -194,16 +193,18 @@ public class GraphDataMaker {
 
     // 根据边生成节点，添加进入Nodes中
     private   void insertNodes(String resultDBPath , Map<String, Edge> edges) throws SQLException {
+        List<String> exitsNode = new ArrayList<>();
+
         List<Node> nodes = new ArrayList<>();
         for(String key: edges.keySet()) {
             Edge edge = edges.get(key);
-            if(!nodes.contains(edge.getMethod1())) {
-                Node tmpNode = new Node(edge.getMethod1());
-                nodes.add(tmpNode);
+            if(!exitsNode.contains(edge.getNodeA().getClassNameAndMethodName())) {
+                nodes.add(edge.getNodeA());
+                exitsNode.add(edge.getNodeA().getClassNameAndMethodName());
             }
-            if(!nodes.contains(edge.getMethod2())) {
-                Node tmpNode = new Node(edge.getMethod2());
-                nodes.add(tmpNode);
+            if(!exitsNode.contains(edge.getNodeB().getClassNameAndMethodName())) {
+                nodes.add(edge.getNodeB());
+                exitsNode.add(edge.getNodeB().getClassNameAndMethodName());
             }
         }
 
@@ -339,6 +340,70 @@ public class GraphDataMaker {
             SQLiteUtils.closeResource(connectionResultDB,statementResult,rs);
         }
 
+    }
+
+    /**
+     * 从数据库中读取节点和边
+     *
+     * @param dbName
+     * @return
+     * @throws SQLException
+     */
+    public List<Node> queryNodes(String dbName) throws SQLException {
+        Connection conn = SQLiteUtils.connectDB(dbName);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT _id, classMethod from node");
+        List<Node> nodes = new ArrayList<>();
+        while (rs.next()) {
+            Node node = new Node(rs.getString(1), rs.getString(2));
+            nodes.add(node);
+        }
+        return nodes;
+    }
+
+
+    public Node queryNode(String classField, Statement statement) throws SQLException {
+        String sql = "SELECT _id, classMethod from node WHERE classMethod = " + classField;
+        ResultSet rs = statement.executeQuery(sql);
+        Node res = new Node(rs.getString(1), rs.getString(2));
+        return res;
+    }
+
+
+    public List<Edge> queryEdges(String dbName) throws SQLException {
+        Connection conn = SQLiteUtils.connectDB(dbName);
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT methodA, methodB, accessType, classField from edge");
+        List<Edge> res = new ArrayList<>();
+        Map<String, Edge> edges = new HashMap<>();
+
+        while (rs.next()) {
+            String method1 = rs.getString(1);
+            String method2 = rs.getString(2);
+
+            String key = method1 + method2;
+            if (edges.containsKey(key)) {
+                Edge edge = edges.get(key);
+                Access access = new Access(rs.getString(3), rs.getString(4));
+                edge.addSA(access);
+                edges.put(key, edge);
+            } else {
+                Edge edge = new Edge();
+
+                edge.setNodeA(queryNode(method1, stmt));
+                edge.setNodeB(queryNode(method2, stmt));
+
+                Access access = new Access(rs.getString(3), rs.getString(4));
+                edge.addSA(access);
+
+                edges.put(key, edge);
+            }
+        }
+        for (String edgeKey : edges.keySet()) {
+            Edge edge = edges.get(edgeKey);
+            res.add(edge);
+        }
+        return res;
     }
 
 

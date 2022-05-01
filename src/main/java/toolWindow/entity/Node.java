@@ -3,6 +3,7 @@ package toolWindow.entity;
 import java.util.Objects;
 
 public  class Node {
+
     public String get_id() {
         return _id;
     }
@@ -24,6 +25,11 @@ public  class Node {
 
     public Node(String classField) {
         this.classNameAndMethodName = classField;
+    }
+
+    public Node(String _id, String classNameAndMethodName) {
+        this._id = _id;
+        this.classNameAndMethodName = classNameAndMethodName;
     }
 
 
