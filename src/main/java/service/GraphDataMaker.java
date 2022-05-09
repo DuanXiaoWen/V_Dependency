@@ -128,6 +128,11 @@ public class GraphDataMaker {
                     CallResult nodeA = graphTable.get(key).get(a);
                     CallResult nodeB = graphTable.get(key).get(b);
 
+                    // filter data related to Test
+                    if(nodeA.getCaller().contains("Test") ||nodeB.getCaller().contains("Test")) {
+                        continue;
+                    }
+
                     if(visited.contains(nodeA.getCaller() + nodeB.getCaller() + key)) {
                         continue;
                     } else {
@@ -241,8 +246,7 @@ public class GraphDataMaker {
             statementResult.executeUpdate("drop table if exists callGraph");
             //statementResult.executeUpdate("create table callGraph (caller, callee)");
             statementResult.executeUpdate
-                    ("create table callGraph(caller, callee, accessType, oHashCode, cSignature, fSignature, fHashCode, fName," +
-                            "constraint cons_01 unique(caller, callee, accessType, oHashCode))");
+                    ("create table callGraph(caller, callee, accessType, oHashCode, cSignature, fSignature, fHashCode, fName)");
 
             rs= statementSource.executeQuery("select * from totalData");
 
