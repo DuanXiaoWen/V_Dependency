@@ -128,10 +128,6 @@ public class GraphDataMaker {
                     CallResult nodeA = graphTable.get(key).get(a);
                     CallResult nodeB = graphTable.get(key).get(b);
 
-                    // filter data related to Test
-                    if(nodeA.getCaller().contains("Test") ||nodeB.getCaller().contains("Test")) {
-                        continue;
-                    }
 
                     if(visited.contains(nodeA.getCaller() + nodeB.getCaller() + key)) {
                         continue;
