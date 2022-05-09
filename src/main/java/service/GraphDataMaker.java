@@ -1,9 +1,11 @@
 package service;
 
-import toolWindow.entity.Access;
-import toolWindow.entity.CallResult;
-import toolWindow.entity.Edge;
-import toolWindow.entity.Node;
+
+
+import toolWindow.LocalToolWindow.entity.Access;
+import toolWindow.LocalToolWindow.entity.CallResult;
+import toolWindow.LocalToolWindow.entity.Edge;
+import toolWindow.LocalToolWindow.entity.Node;
 import util.SQLiteUtils;
 
 
@@ -180,7 +182,7 @@ public class GraphDataMaker {
             for (Access access : edge.getAccessList()) {
                 String classField = access.getClassSignatureAndFieldName();
 
-                String sql = "INSERT INTO edge(nodeA, nodeB, accessType, classField) values (\'"
+                String sql = "INSERT INTO edge(methodA, methodB, accessType, classField) values (\'"
                         + edge.getNodeA().getClassNameAndMethodName()
                         + "\',\'" + edge.getNodeB().getClassNameAndMethodName()
                         + "\',\'" + access.getAccessType() + "\',\'" + access.getClassSignatureAndFieldName() + "\'" +
@@ -358,14 +360,17 @@ public class GraphDataMaker {
             Node node = new Node(rs.getString(1), rs.getString(2));
             nodes.add(node);
         }
+        SQLiteUtils.closeResource(conn,stmt,rs);
         return nodes;
     }
 
 
-    public Node queryNode(String classField, Statement statement) throws SQLException {
-        String sql = "SELECT _id, classMethod from node WHERE classMethod = " + classField;
-        ResultSet rs = statement.executeQuery(sql);
+    public Node queryNode(String classField, Connection conn) throws SQLException {
+        Statement stmt = conn.createStatement();
+        String sql = "SELECT _id, classMethod from node WHERE classMethod = \'" + classField + "\';";
+        ResultSet rs = stmt.executeQuery(sql);
         Node res = new Node(rs.getString(1), rs.getString(2));
+        stmt.close();
         return res;
     }
 
@@ -381,19 +386,22 @@ public class GraphDataMaker {
             String method1 = rs.getString(1);
             String method2 = rs.getString(2);
 
+            String accessType = rs.getString(3);
+            String classField = rs.getString(4);
+
             String key = method1 + method2;
             if (edges.containsKey(key)) {
                 Edge edge = edges.get(key);
-                Access access = new Access(rs.getString(3), rs.getString(4));
+                Access access = new Access(accessType, classField);
                 edge.addSA(access);
                 edges.put(key, edge);
             } else {
                 Edge edge = new Edge();
 
-                edge.setNodeA(queryNode(method1, stmt));
-                edge.setNodeB(queryNode(method2, stmt));
+                edge.setNodeA(queryNode(method1, conn));
+                edge.setNodeB(queryNode(method2, conn));
 
-                Access access = new Access(rs.getString(3), rs.getString(4));
+                Access access = new Access(accessType, classField);
                 edge.addSA(access);
 
                 edges.put(key, edge);
@@ -403,13 +411,15 @@ public class GraphDataMaker {
             Edge edge = edges.get(edgeKey);
             res.add(edge);
         }
+
+        SQLiteUtils.closeResource(conn,stmt,rs);
         return res;
     }
 
 
     public  void run(String sourceDatabasePath, String resultDatabasePath) throws SQLException {
 
-        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
+//        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
 
         Map<String, Map<String, String>> fieldData = fieldDataGenerate(sourceDatabasePath);
 
@@ -419,6 +429,13 @@ public class GraphDataMaker {
 
         generateEdge(resultDatabasePath,dataAccessResult);
     }
+
+//    public static void main(String[] args) throws SQLException {
+//        GraphDataMaker maker = new GraphDataMaker();
+//
+//        maker.run("/home/kyriepotreler/Projects/maven-surefire/maven-surefire-plugin/TotalData.db",
+//                "/home/kyriepotreler/Projects/maven-surefire/maven-surefire-plugin/callGraphResult.db");
+//    }
 
 
 }

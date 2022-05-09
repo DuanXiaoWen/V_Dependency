@@ -1,18 +1,19 @@
 package toolWindow.LocalToolWindow;
 
 
-import com.intellij.openapi.wm.ToolWindow;
-import toolWindow.entity.Edge;
-import toolWindow.entity.Node;
+import toolWindow.LocalToolWindow.entity.Edge;
+import toolWindow.LocalToolWindow.entity.Node;
 import util.Colors;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Canvas extends JPanel {
@@ -34,117 +35,134 @@ public class Canvas extends JPanel {
         this.localToolWindow=localToolWindow;
     }
 
-    public void paintComponent(Graphics graphics) {
-        super.paintComponent(graphics);
+//    public void paintComponent(Graphics graphics) {
+//        super.paintComponent(graphics);
+//
+//        // set up the drawing panel
+//        Graphics2D graphics2D = (Graphics2D) graphics;
+//        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//
+//        // fill the background for entire canvas
+//        graphics2D.setColor(Colors.BACKGROUND_COLOR.color);
+//        graphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
+//
+//
+//        // draw un-highlighted edgesMap
+//
+//        visibleEdges.stream().filter(edge -> !isNodeHighlighted(edge.getNodeA()) && !isNodeHighlighted(edge.getNodeB()))
+//                .forEach(edge -> drawEdge(graphics2D, edge, Colors.UN_HIGHLIGHTED_COLOR.color));
+//
+//        // draw upstream/downstream edgesMap
+//        Set<Node> highlightedNodes= visibleNodes.stream().filter(this::isNodeHighlighted).collect(Collectors.toSet());
+//
+//
+//        val upstreamEdges = highlightedNodes.flatMap {
+//            it.inEdges.values
+//        }.toSet()
+//        val downstreamEdges = highlightedNodes.flatMap {
+//            it.outEdges.values
+//        }.toSet()
+//        upstreamEdges.forEach {
+//            drawEdge(graphics2D, it, Colors.UPSTREAM_COLOR.color)
+//        }
+//        downstreamEdges.forEach {
+//            drawEdge(graphics2D, it, Colors.DOWNSTREAM_COLOR.color)
+//        }
+//
+//        // draw un-highlighted labels
+//        val upstreamNodes = upstreamEdges.map {
+//            it.sourceNode
+//        }.toSet()
+//        val downstreamNodes = downstreamEdges.map {
+//            it.targetNode
+//        }.toSet()
+//        val unHighlightedNodes = this.visibleNodes
+//                .filter {
+//            !isNodeHighlighted(it) && !upstreamNodes.contains(it) && !downstreamNodes.contains(it)
+//        }
+//                .toSet()
+//        unHighlightedNodes.forEach {
+//            drawNodeLabels(graphics2D, it, Colors.NEUTRAL_COLOR.color, false)
+//        }
+//
+//        // draw un-highlighted nodesMap (upstream/downstream nodesMap are excluded)
+//        this.nodeShapesMap.clear()
+//        unHighlightedNodes
+//                .filter {
+//            !upstreamNodes.contains(it) && !downstreamNodes.contains(it)
+//        }
+//                .forEach {
+//            drawNode(graphics2D, it, Colors.UN_HIGHLIGHTED_COLOR.color)
+//        }
+//
+//        // draw upstream/downstream label and nodesMap
+//        upstreamNodes.forEach {
+//            drawNodeLabels(graphics2D, it, Colors.UPSTREAM_COLOR.color, false)
+//        }
+//        downstreamNodes.forEach {
+//            drawNodeLabels(graphics2D, it, Colors.DOWNSTREAM_COLOR.color, false)
+//        }
+//        upstreamNodes.forEach {
+//            drawNode(graphics2D, it, Colors.UPSTREAM_COLOR.color)
+//        }
+//        downstreamNodes.forEach {
+//            drawNode(graphics2D, it, Colors.DOWNSTREAM_COLOR.color)
+//        }
+//
+//        // draw highlighted node and label
+//        this.visibleNodes
+//                .filter {
+//            isNodeHighlighted(it)
+//        }
+//                .forEach {
+//            drawNode(graphics2D, it, Colors.HIGHLIGHTED_COLOR.color)
+//            drawNodeLabels(graphics2D, it, Colors.HIGHLIGHTED_COLOR.color, true)
+//        }
+//
+//        // draw legend
+//        if (this.seeMoreToolWindow.isLegendNeeded()) {
+//            val legend = if (this.seeMoreToolWindow.isNodeColorByAccess()) {
+//                listOf(PsiModifier.PUBLIC, PsiModifier.PROTECTED, PsiModifier.PACKAGE_LOCAL, PsiModifier.PRIVATE)
+//                        .map {
+//                    this.methodAccessLabelMap.getValue(it) to this.methodAccessColorMap.getValue(it)
+//                }
+//            } else {
+//                emptyList()
+//            }
+//            drawLegend(graphics2D, legend)
+//        }
+//
+//    }
 
-        // set up the drawing panel
-        Graphics2D graphics2D = (Graphics2D) graphics;
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-        // fill the background for entire canvas
-        graphics2D.setColor(Colors.BACKGROUND_COLOR.color);
-        graphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 
-        // draw un-highlighted edgesMap
-
-        for(Edge edge:visibleEdges){
-            if(!isNodeHighlighted(edge.getMethod1()))
-        }
-        this.visibleEdges.
-                .filter {
-            !isNodeHighlighted(it.sourceNode) && !isNodeHighlighted(it.targetNode)
-        }
-                .forEach {
-            drawNonLoopEdge(graphics2D, it, Colors.UN_HIGHLIGHTED_COLOR.color)
-        }
-
-        // draw upstream/downstream edgesMap
-        val highlightedNodes = this.visibleNodes.filter {
-            isNodeHighlighted(it)
-        }.toSet()
-        val upstreamEdges = highlightedNodes.flatMap {
-            it.inEdges.values
-        }.toSet()
-        val downstreamEdges = highlightedNodes.flatMap {
-            it.outEdges.values
-        }.toSet()
-        upstreamEdges.forEach {
-            drawNonLoopEdge(graphics2D, it, Colors.UPSTREAM_COLOR.color)
-        }
-        downstreamEdges.forEach {
-            drawNonLoopEdge(graphics2D, it, Colors.DOWNSTREAM_COLOR.color)
-        }
-
-        // draw un-highlighted labels
-        val upstreamNodes = upstreamEdges.map {
-            it.sourceNode
-        }.toSet()
-        val downstreamNodes = downstreamEdges.map {
-            it.targetNode
-        }.toSet()
-        val unHighlightedNodes = this.visibleNodes
-                .filter {
-            !isNodeHighlighted(it) && !upstreamNodes.contains(it) && !downstreamNodes.contains(it)
-        }
-                .toSet()
-        unHighlightedNodes.forEach {
-            drawNodeLabels(graphics2D, it, Colors.NEUTRAL_COLOR.color, false)
-        }
-
-        // draw un-highlighted nodesMap (upstream/downstream nodesMap are excluded)
-        this.nodeShapesMap.clear()
-        unHighlightedNodes
-                .filter {
-            !upstreamNodes.contains(it) && !downstreamNodes.contains(it)
-        }
-                .forEach {
-            drawNode(graphics2D, it, Colors.UN_HIGHLIGHTED_COLOR.color)
-        }
-
-        // draw upstream/downstream label and nodesMap
-        upstreamNodes.forEach {
-            drawNodeLabels(graphics2D, it, Colors.UPSTREAM_COLOR.color, false)
-        }
-        downstreamNodes.forEach {
-            drawNodeLabels(graphics2D, it, Colors.DOWNSTREAM_COLOR.color, false)
-        }
-        upstreamNodes.forEach {
-            drawNode(graphics2D, it, Colors.UPSTREAM_COLOR.color)
-        }
-        downstreamNodes.forEach {
-            drawNode(graphics2D, it, Colors.DOWNSTREAM_COLOR.color)
-        }
-
-        // draw highlighted node and label
-        this.visibleNodes
-                .filter {
-            isNodeHighlighted(it)
-        }
-                .forEach {
-            drawNode(graphics2D, it, Colors.HIGHLIGHTED_COLOR.color)
-            drawNodeLabels(graphics2D, it, Colors.HIGHLIGHTED_COLOR.color, true)
-        }
-
-        // draw legend
-        if (this.seeMoreToolWindow.isLegendNeeded()) {
-            val legend = if (this.seeMoreToolWindow.isNodeColorByAccess()) {
-                listOf(PsiModifier.PUBLIC, PsiModifier.PROTECTED, PsiModifier.PACKAGE_LOCAL, PsiModifier.PRIVATE)
-                        .map {
-                    this.methodAccessLabelMap.getValue(it) to this.methodAccessColorMap.getValue(it)
-                }
-            } else {
-                emptyList()
-            }
-            drawLegend(graphics2D, legend)
-        }
-
+    private void drawEdge(Graphics2D graphics2D, Edge edge, Color color) {
+        Point2D.Float sourceNodeCenter = toCameraView(edge.getNodeA().getPoint());
+        Point2D.Float targetNodeCenter = toCameraView(edge.getNodeB().getPoint());
+        drawLine(graphics2D, sourceNodeCenter, targetNodeCenter, color);
+//        drawLineArrow(graphics2D, sourceNodeCenter, targetNodeCenter, color)
     }
 
-
-    private boolean isNodeHighlighted(Node node){
-        return this.hoveredNode .equals(node) || this.localToolWindow.isFocusedMethod(node.method);
+    private Point2D.Float toCameraView(Point2D.Float point){
+        Dimension canvasSize = this.localToolWindow.getCanvasSize();
+        return new Point2D.Float(
+                this.zoomRatio.x * point.x * canvasSize.width - this.cameraOrigin.x,
+                this.zoomRatio.y * point.y * canvasSize.height - this.cameraOrigin.y
+        );
     }
+    private void drawLine(
+            Graphics2D graphics2D,
+            Point2D.Float nodeA,
+            Point2D.Float nodeB,
+            Color lineColor) {
+        Line2D.Float shape = new Line2D.Float(nodeA, nodeB);
+        Shape strokedShape = this.solidLineStroke.createStrokedShape(shape);
+        graphics2D.setColor(lineColor);
+        graphics2D.draw(strokedShape);
+    }
+//    private boolean isNodeHighlighted(Node node){
+//        return this.hoveredNode.equals(node)|| this.localToolWindow.isFocusedMethod(node.method)
+//    }
 
 }

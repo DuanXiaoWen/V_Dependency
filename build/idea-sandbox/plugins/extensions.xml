@@ -900,6 +900,34 @@
         </option>
       </plugins>
     </entry>
+    <entry key="*.agent">
+      <plugins>
+        <option name="myPlugins">
+          <set>
+            <plugin>
+              <option name="myPluginId" value="com.badahori.creatures.plugins.intellij.agenteering" />
+              <option name="myPluginName" value="Creatures CAOS and Agenteering" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+          </set>
+        </option>
+      </plugins>
+    </entry>
+    <entry key="*.agents">
+      <plugins>
+        <option name="myPlugins">
+          <set>
+            <plugin>
+              <option name="myPluginId" value="com.badahori.creatures.plugins.intellij.agenteering" />
+              <option name="myPluginName" value="Creatures CAOS and Agenteering" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+          </set>
+        </option>
+      </plugins>
+    </entry>
     <entry key="*.ahk">
       <plugins>
         <option name="myPlugins">
@@ -3915,6 +3943,12 @@
             <plugin>
               <option name="myPluginId" value="OpenGL-Plugin" />
               <option name="myPluginName" value="OpenGL Support" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
@@ -7064,6 +7098,12 @@
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
           </set>
         </option>
       </plugins>
@@ -7115,6 +7155,12 @@
             <plugin>
               <option name="myPluginId" value="GLSL" />
               <option name="myPluginName" value="GLSL Support" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
@@ -7570,6 +7616,12 @@
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
           </set>
         </option>
       </plugins>
@@ -7677,6 +7729,12 @@
             <plugin>
               <option name="myPluginId" value="OpenGL-Plugin" />
               <option name="myPluginName" value="OpenGL Support" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
@@ -15762,6 +15820,20 @@
         </option>
       </plugins>
     </entry>
+    <entry key="*.pray">
+      <plugins>
+        <option name="myPlugins">
+          <set>
+            <plugin>
+              <option name="myPluginId" value="com.badahori.creatures.plugins.intellij.agenteering" />
+              <option name="myPluginName" value="Creatures CAOS and Agenteering" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+          </set>
+        </option>
+      </plugins>
+    </entry>
     <entry key="*.prc">
       <plugins>
         <option name="myPlugins">
@@ -18551,6 +18623,12 @@
               <option name="myFromCustomRepository" value="false" />
             </plugin>
             <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+            <plugin>
               <option name="myPluginId" value="com.intellij.resharper.unity" />
               <option name="myPluginName" value="Unity Support" />
               <option name="myBundled" value="false" />
@@ -20534,6 +20612,12 @@
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
           </set>
         </option>
       </plugins>
@@ -20551,6 +20635,12 @@
             <plugin>
               <option name="myPluginId" value="OpenGL-Plugin" />
               <option name="myPluginName" value="OpenGL Support" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
@@ -22264,6 +22354,12 @@
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
           </set>
         </option>
       </plugins>
@@ -22391,6 +22487,12 @@
             <plugin>
               <option name="myPluginId" value="GLSL" />
               <option name="myPluginName" value="GLSL Support" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+            <plugin>
+              <option name="myPluginId" value="com.github.leeteng2001.betterglsljetbrain" />
+              <option name="myPluginName" value="Better Glsl" />
               <option name="myBundled" value="false" />
               <option name="myFromCustomRepository" value="false" />
             </plugin>
@@ -24788,6 +24890,20 @@
         </option>
       </plugins>
     </entry>
+    <entry key="Dockerfile.native-micro">
+      <plugins>
+        <option name="myPlugins">
+          <set>
+            <plugin>
+              <option name="myPluginId" value="Docker" />
+              <option name="myPluginName" value="Docker" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+          </set>
+        </option>
+      </plugins>
+    </entry>
     <entry key="ErrorLog.txt">
       <plugins>
         <option name="myPlugins">
@@ -25601,6 +25717,20 @@
       </plugins>
     </entry>
     <entry key="go.mod">
+      <plugins>
+        <option name="myPlugins">
+          <set>
+            <plugin>
+              <option name="myPluginId" value="org.jetbrains.plugins.go" />
+              <option name="myPluginName" value="Go" />
+              <option name="myBundled" value="false" />
+              <option name="myFromCustomRepository" value="false" />
+            </plugin>
+          </set>
+        </option>
+      </plugins>
+    </entry>
+    <entry key="go.work">
       <plugins>
         <option name="myPlugins">
           <set>
