@@ -75,6 +75,7 @@ public class LocalToolWindow {
                     public void run(@NotNull ProgressIndicator indicator) {
                         ApplicationManager.getApplication().invokeLater(
                                 new Runnable() {
+
                                     @Override
                                     public void run() {
                                         GraphDataMaker graphDataMaker=new GraphDataMaker();
@@ -90,6 +91,8 @@ public class LocalToolWindow {
                                             graphDataMaker.run(sourceDB,resultDB);
                                             List<Node> nodeList=graphDataMaker.queryNodes(resultDB);
                                             List<Edge> edgeList=graphDataMaker.queryEdges(resultDB);
+                                            System.out.println(nodeList.size());
+                                            System.out.println(edgeList.size());
 
 
                                             Set<VirtualFile> sourceRoots=new HashSet<>(List.of(ModuleRootManager.getInstance(ModuleManager.getInstance(project).findModuleByName(selectedMoudleName)).getSourceRoots()));
@@ -120,6 +123,19 @@ public class LocalToolWindow {
 
 
     }
+//
+//    private Graph buildGraph(List<Node> nodeList,List<Edge> edgeList,Set<PsiMethod> psiMethods) {
+//
+//        val graph = Graph()
+//        methods.forEach { graph.addNode(it) }
+//        dependencyView.forEach {
+//            graph.addNode(it.caller)
+//            graph.addNode(it.callee)
+//            graph.addEdge(it.caller, it.callee)
+//        }
+//        Utils.layout(graph)
+//        return graph
+//    }
 
     private boolean checkSourceDatabaseExistence(Project project){
         String DBsLocation= project.getBasePath()+

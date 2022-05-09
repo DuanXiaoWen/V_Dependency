@@ -419,7 +419,7 @@ public class GraphDataMaker {
 
     public  void run(String sourceDatabasePath, String resultDatabasePath) throws SQLException {
 
-//        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
+        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
 
         Map<String, Map<String, String>> fieldData = fieldDataGenerate(sourceDatabasePath);
 
