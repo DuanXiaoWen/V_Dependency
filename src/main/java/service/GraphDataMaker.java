@@ -173,6 +173,7 @@ public class GraphDataMaker {
     private  void insertEdges(String resultDBPath,Map<String, Edge> edges) throws SQLException {
         Connection conn = SQLiteUtils.connectDB(resultDBPath);
         Statement stmt = conn.createStatement();
+        stmt.executeUpdate("DROP TABLE IF EXISTS edge");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS edge(methodA, methodB, accessType, classField)");
 
         // 插入节点数据
@@ -213,6 +214,7 @@ public class GraphDataMaker {
 
         Connection conn = SQLiteUtils.connectDB(resultDBPath);
         Statement stmt = conn.createStatement();
+        stmt.executeUpdate("DROP TABLE IF EXISTS node");
         stmt.executeUpdate("CREATE TABLE IF NOT EXISTS node(classMethod, _id)");
 
         // 插入节点数据
@@ -255,6 +257,9 @@ public class GraphDataMaker {
             String fSignature = null;
             String fName = null;
             String fHashCode = null;
+
+//            String dbCommand = "insert into callGraph values";
+//            int commendCount = 0;
 
             while(rs.next()) {
                 String type = rs.getString(1);
@@ -299,10 +304,18 @@ public class GraphDataMaker {
                             String dbCommand = "insert into callGraph values(";
                             if(!callTreeCache.get(threadID).isEmpty())
                             {
-                                dbCommand += "'"+callTreeCache.get(threadID).peek()+"','"+methodDetail + "','"
+                                dbCommand += "('"+callTreeCache.get(threadID).peek()+"','"+methodDetail + "','"
                                         + fieldAccessType + "','" + oHashCode + "','" + cSignature + "','"
                                         + fSignature + "','" + fHashCode + "','" + fName + "')";
-                                System.out.println(dbCommand);
+//                                System.out.println(dbCommand);
+//                                commendCount++;
+//                                if(commendCount > 500) {
+//                                    dbCommand += ";";
+//                                    commendCount = 0;
+//                                    statementResult.executeUpdate(dbCommand);
+//                                    dbCommand = "insert into callGraph values";
+//                                }
+
                                 fieldAccessType = null;
                                 try
                                 {
@@ -417,7 +430,7 @@ public class GraphDataMaker {
     }
 
 
-    public  void run(String sourceDatabasePath, String resultDatabasePath) throws SQLException {
+    public void run(String sourceDatabasePath, String resultDatabasePath) throws SQLException {
 
         createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
 
