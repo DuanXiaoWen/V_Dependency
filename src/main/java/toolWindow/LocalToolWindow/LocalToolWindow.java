@@ -1,5 +1,6 @@
 package toolWindow.LocalToolWindow;
 
+import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModuleManager;
@@ -7,42 +8,92 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import service.GraphDataMaker;
 import toolWindow.LocalToolWindow.entity.Edge;
 import toolWindow.LocalToolWindow.entity.Node;
-import util.GraphUtils;
+import util.PsiUtils;
 import util.SQLiteUtils;
 import util.VDProperties;
 
-import java.util.List;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class LocalToolWindow {
     private JPanel content;
     private JComboBox<String> moduleScopeComboBox;
     private JButton RUNButton;
     private JPanel canvasPanel;
-    private Set<PsiMethod> focusedMethods = new HashSet<>();
+    private PsiElement focusedElement;
+
+    private JButton viewSourceCodeButton;
+    private JTextField searchTextField;
+    private  Canvas canvas= new Canvas(this);
     public LocalToolWindow(ToolWindow toolWindow, Project project){
         initModuleComboBox(project);
-        RUNButton.addActionListener(e->run(project));
+        viewSourceCodeButton.addActionListener(e-> viewSourceCodeHandler());
+        searchTextField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {}
+            @Override
+            public void keyReleased(KeyEvent e) {
+                canvas.repaint();
+            }
+        });
+        MouseEventHandler mouseEventHandler = new MouseEventHandler(canvas);
+
+        canvas.addMouseListener(mouseEventHandler);
+        canvas.addMouseMotionListener(mouseEventHandler);
+        canvas.addMouseWheelListener(mouseEventHandler);
+
+        this.canvas.setVisible(false);
+        this.canvasPanel.add(this.canvas);
+
+
+        RUNButton.addActionListener(e->{
+            focusedElement=null;
+            run(project);
+        });
 
     }
+
+    private void setupUiBeforeRun() {
+
+        Arrays.asList(
+                viewSourceCodeButton,
+                searchTextField
+        ).forEach(e->
+                ((JComponent)e).setEnabled(false)
+        );
+        canvas.setVisible(false);
+    }
+    private void setupUiAfterRun() {
+
+        canvas.setVisible(true);
+        this.canvasPanel.updateUI();
+
+
+        enableFocusedMethodButtons();
+        Arrays.asList(
+                searchTextField
+        ).forEach(e->
+                ((JComponent)e).setEnabled(true)
+        );
+
+    }
+
 
 
     private void initModuleComboBox(Project project){
@@ -54,6 +105,8 @@ public class LocalToolWindow {
         moduleScopeComboBox.setSelectedIndex(-1);
         moduleScopeComboBox.setEnabled(true);
     }
+
+
 
     private void run(Project project){
         String selectedMoudleName=(String)moduleScopeComboBox.getSelectedItem();
@@ -69,49 +122,31 @@ public class LocalToolWindow {
                 //todo:提醒用户检查Module下是否存在生成的TotalData.db
 
             }else {
-
+                setupUiBeforeRun();
                 ProgressManager.getInstance().run(new Task.Backgroundable(project, "VDpendency") {
                     @Override
                     public void run(@NotNull ProgressIndicator indicator) {
-                        ApplicationManager.getApplication().invokeLater(
-                                new Runnable() {
+                        ApplicationManager.getApplication().runReadAction(
+                                () -> {
+                                    GraphDataMaker graphDataMaker=new GraphDataMaker();
+                                    try {
+                                        String sourceDB=PropertiesComponent.getInstance(project).getValue(VDProperties.SelectedModule.toString())+
+                                                PropertiesComponent.getInstance(project).getValue(VDProperties.SourceDatabaseName.toString());
+                                        String resultDB=PropertiesComponent.getInstance(project).getValue(VDProperties.SelectedModule.toString())+
+                                                PropertiesComponent.getInstance(project).getValue(VDProperties.ResultDatabaseName.toString());
 
-                                    @Override
-                                    public void run() {
-                                        GraphDataMaker graphDataMaker=new GraphDataMaker();
+                                        graphDataMaker.run(sourceDB,resultDB);
 
+                                        List<Edge> edgeList=graphDataMaker.queryEdges(resultDB);
+                                        System.out.println(edgeList.size());
+                                        Graph graph=PsiUtils.buildGraph(project,edgeList);
+                                        canvas.reset(graph);
+                                        setupUiAfterRun();
 
-                                        try {
-                                            String sourceDB=PropertiesComponent.getInstance(project).getValue(VDProperties.SelectedModule.toString())+
-                                                    PropertiesComponent.getInstance(project).getValue(VDProperties.SourceDatabaseName.toString());
-                                            String resultDB=PropertiesComponent.getInstance(project).getValue(VDProperties.SelectedModule.toString())+
-                                                    PropertiesComponent.getInstance(project).getValue(VDProperties.ResultDatabaseName.toString());
-
-
-                                            graphDataMaker.run(sourceDB,resultDB);
-                                            List<Node> nodeList=graphDataMaker.queryNodes(resultDB);
-                                            List<Edge> edgeList=graphDataMaker.queryEdges(resultDB);
-                                            System.out.println(nodeList.size());
-                                            System.out.println(edgeList.size());
-
-
-                                            Set<VirtualFile> sourceRoots=new HashSet<>(List.of(ModuleRootManager.getInstance(ModuleManager.getInstance(project).findModuleByName(selectedMoudleName)).getSourceRoots()));
-
-                                            Set<PsiJavaFile> files= GraphUtils.getSourceCodeFiles(project,sourceRoots);
-                                            Set<PsiMethod> methods=GraphUtils.getMethodsFromFiles(files);
-
-
-
-
-
-
-
-
-                                        } catch (SQLException e) {
-                                            e.printStackTrace();
-                                        }
-
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
                                     }
+
                                 }
                         );
                     }
@@ -123,19 +158,26 @@ public class LocalToolWindow {
 
 
     }
-//
-//    private Graph buildGraph(List<Node> nodeList,List<Edge> edgeList,Set<PsiMethod> psiMethods) {
-//
-//        val graph = Graph()
-//        methods.forEach { graph.addNode(it) }
-//        dependencyView.forEach {
-//            graph.addNode(it.caller)
-//            graph.addNode(it.callee)
-//            graph.addEdge(it.caller, it.callee)
-//        }
-//        Utils.layout(graph)
-//        return graph
-//    }
+
+    public LocalToolWindow toggleFocusedMethod(PsiElement psiElement){
+        if (Objects.equals(psiElement,focusedElement)) {
+            // clicked on a selected node
+            this.focusedElement=null;
+        } else {
+            // clicked on an un-selected node
+            this.focusedElement=psiElement;
+        }
+        return this;
+    }
+
+    private void viewSourceCodeHandler() {
+
+        EditorHelper.openInEditor(this.focusedElement);
+    }
+    private void enableFocusedMethodButtons() {
+        this.viewSourceCodeButton.setEnabled(Objects.equals(focusedElement,null));
+
+    }
 
     private boolean checkSourceDatabaseExistence(Project project){
         String DBsLocation= project.getBasePath()+
@@ -154,8 +196,7 @@ public class LocalToolWindow {
                         File.separator);
                 conn.close();
 
-                System.out
-                        .println("Close Connection!");
+                System.out.println("Close Connection!");
                 return true;
             }
 
@@ -166,9 +207,17 @@ public class LocalToolWindow {
         return false;
     }
 
-
-    public boolean isFocusedMethod(PsiMethod method){
-        return this.focusedMethods.contains(method);
+    public LocalToolWindow clearFocusedMethods(){
+        focusedElement=null;
+        enableFocusedMethodButtons();
+        return this;
+    }
+    public boolean isQueried(String text){
+        String searchQuery = this.searchTextField.getText().toLowerCase();
+        return !searchQuery.isEmpty() && text.toLowerCase().contains(searchQuery);
+    }
+    public boolean isFocusedElement(PsiElement psiElement){
+        return Objects.equals(psiElement, focusedElement);
     }
     public Dimension getCanvasSize(){
         return this.canvasPanel.getSize();

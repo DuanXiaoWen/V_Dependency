@@ -248,7 +248,7 @@ public class GraphDataMaker {
             statementResult.executeUpdate
                     ("create table callGraph(caller, callee, accessType, oHashCode, cSignature, fSignature, fHashCode, fName)");
 
-            rs= statementSource.executeQuery("select * from totalData");
+            rs= statementSource.executeQuery("select * from TotalData");
 
 
             String fieldAccessType = null;
@@ -301,7 +301,7 @@ public class GraphDataMaker {
                         else {
                             methodDetail = callTreeCache.get(threadID).pop();
 
-                            String dbCommand = "insert into callGraph values(";
+                            String dbCommand = "insert into callGraph values";
                             if(!callTreeCache.get(threadID).isEmpty())
                             {
                                 dbCommand += "('"+callTreeCache.get(threadID).peek()+"','"+methodDetail + "','"
@@ -320,11 +320,12 @@ public class GraphDataMaker {
                                 try
                                 {
                                     statementResult.executeUpdate(dbCommand);
-                                    System.out.println(dbCommand+"  "+" is successfully executed");
+//                                    System.out.println(dbCommand+"  "+" is successfully executed");
                                 }
                                 catch (SQLException e1)
                                 {
-                                    System.out.println(e1);
+                                    System.out.println(dbCommand+"  "+" is NOT successfully executed");
+                                    e1.printStackTrace();
                                 }
                             }
                         }
@@ -432,15 +433,15 @@ public class GraphDataMaker {
 
     public void run(String sourceDatabasePath, String resultDatabasePath) throws SQLException {
 
-        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
-
-        Map<String, Map<String, String>> fieldData = fieldDataGenerate(sourceDatabasePath);
-
-        List<String> nodes = new ArrayList<>();
-
-        List<CallResult> dataAccessResult = outerDataAccess(resultDatabasePath, fieldData, nodes);
-
-        generateEdge(resultDatabasePath,dataAccessResult);
+//        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
+//
+//        Map<String, Map<String, String>> fieldData = fieldDataGenerate(sourceDatabasePath);
+//
+//        List<String> nodes = new ArrayList<>();
+//
+//        List<CallResult> dataAccessResult = outerDataAccess(resultDatabasePath, fieldData, nodes);
+//
+//        generateEdge(resultDatabasePath,dataAccessResult);
     }
 
 //    public static void main(String[] args) throws SQLException {

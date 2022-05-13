@@ -2,6 +2,7 @@ package toolWindow.LocalToolWindow.entity;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Edge {
@@ -46,5 +47,26 @@ public class Edge {
 
     public Edge() {
         this.accessList = new LinkedList<>();
+    }
+
+    public Edge(Node nodeA,Node nodeB,List<Access> accessList,String _id){
+        this.nodeA=nodeA;
+        this.nodeB=nodeB;
+        this.accessList=accessList;
+        this._id=_id;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Edge edge = (Edge) o;
+        return Objects.equals(_id, edge._id) && nodeA.equals(edge.nodeA) && nodeB.equals(edge.nodeB);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_id, nodeA, nodeB);
     }
 }

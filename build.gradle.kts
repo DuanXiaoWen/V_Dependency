@@ -21,6 +21,9 @@ dependencies {
     implementation("com.github.alexfu:SQLiteQueryBuilder:0.3.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    implementation("guru.nidi:graphviz-java:0.8.0"){
+        exclude( group="org.slf4j")
+    }
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
