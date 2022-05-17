@@ -1,5 +1,7 @@
 package toolWindow.LocalToolWindow.entity;
 
+import com.intellij.psi.PsiVariable;
+
 public class Access {
 
     public Access() {
@@ -27,6 +29,17 @@ public class Access {
         this.accessType = accessType;
     }
 
+    public PsiVariable getPsiVariable() {
+        return psiVariable;
+    }
+
+    public void setPsiVariable(PsiVariable psiVariable) {
+        this.psiVariable = psiVariable;
+    }
+
+    PsiVariable psiVariable;
     String classSignatureAndFieldName;
     String accessType;
+
+
 }

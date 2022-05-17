@@ -8,6 +8,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiElementFilter;
 import com.intellij.psi.util.PsiTreeUtil;
 import toolWindow.LocalToolWindow.Graph;
+import toolWindow.LocalToolWindow.entity.Access;
 import toolWindow.LocalToolWindow.entity.Edge;
 import toolWindow.LocalToolWindow.entity.Node;
 
@@ -72,24 +73,113 @@ public class PsiUtils {
     public static  Graph buildGraph(Project project,List<Edge> edgeList) {
         Graph graph=new Graph();
         for(Edge edge:edgeList){
+
             graph.addEdge(project,edge);
-        }
-        for(Node node:graph.getNodes()){
-            if(node.getPsiElement()==null){
-                System.out.println(node.getClassNameAndMethodName());
+            for(Access access:edge.getAccessList()){
+                access.setPsiVariable(getVariableForAccess(project,access));
             }
         }
         GraphUtils.layout(graph);
-
         return graph;
     }
 
+    public static PsiVariable getVariableForAccess(Project project, Access access){
+        // Lorg/apache/maven/plugin/surefire/AbstractSurefireMojo;effectiveForkCount
+        String[] fieldInfoRaw=access.getClassSignatureAndFieldName().split(";");
+        int index=fieldInfoRaw[0].lastIndexOf('/');
+        String packageName=fieldInfoRaw[0].substring(1,index).replace('/','.');
+        String classNameRaw=fieldInfoRaw[0].substring(index+1);
+        String[] classes=analyzeClassName(classNameRaw);
+        String originClass=classes[0];
+        String innerClass=classes[1];
+        String anonymousClass=classes[2];
+        String packageClassName="";
+        int dollorIndexOfField=fieldInfoRaw[1].indexOf('$');
+        String fieldName=fieldInfoRaw[1];
+        if(dollorIndexOfField>0){
+            fieldName=fieldInfoRaw[1].substring(dollorIndexOfField+1);
+        }
+        PsiClass psiClass;
+        final PsiVariable[] psiVariables = new PsiVariable[1];
 
+        if(anonymousClass.isEmpty()){
+            if(!innerClass.isEmpty()){
+                //originClass.innerClass
+                packageClassName=packageName + "." +
+                        originClass + "." +
+                        innerClass;
+            }else {
+                //originClass
+                packageClassName=packageName + "." + originClass;
+            }
+
+            psiClass=getPsiClassByName(project,packageClassName);
+
+            psiVariables[0] =psiClass.findFieldByName(fieldName,false);
+
+
+        }else {
+            if(!innerClass.isEmpty()){
+                //originClass.innerClass.anonymousClass
+                packageClassName=packageName + "." +
+                        originClass + "." +
+                        innerClass;
+                psiClass = getPsiClassByName(project, packageClassName);
+            }else {
+                //originClass.anonymousClass
+                packageClassName = packageName + "." +
+                        originClass;
+                psiClass = getPsiClassByName(project, packageClassName);
+
+            }
+            List<PsiAnonymousClass> anonymousClasses=findAnonymousClasses(psiClass);
+            int anonymousIndex=Integer.parseInt(classes[2])-1;
+
+            if(dollorIndexOfField>0 && fieldInfoRaw[1].substring(0,dollorIndexOfField).equals("val")){
+                //anonymous class use outer final variable
+
+                PsiElement element = anonymousClasses.get(anonymousIndex).getScope();
+                String finalFieldName = fieldName;
+                element.accept(new JavaRecursiveElementVisitor() {
+
+                    private PsiLocalVariable psiLocalVariable;
+
+                    @Override
+                    public void visitLocalVariable(PsiLocalVariable variable) {
+                        super.visitLocalVariable(variable);
+                        if(variable.getName().equals(finalFieldName)){
+                            psiLocalVariable = variable;
+                            psiVariables[0] =  psiLocalVariable;
+                        }
+
+                    }
+                });
+                if(psiVariables[0]==null){
+                    for(PsiParameter parameter:((PsiMethod) element).getParameterList().getParameters()){
+                        if(parameter.getName().equals(fieldName)){
+                            psiVariables[0]=parameter;
+                            return psiVariables[0];
+                        }
+                    }
+
+                }
+
+
+            }else {
+//                Arrays.stream(anonymousClasses.get(anonymousIndex).getFields()).map(e->e.getName()).collect(Collectors.toList()).forEach(System.out::println);
+
+                psiVariables[0] =anonymousClasses.get(anonymousIndex).findFieldByName(fieldName,false);
+            }
+
+        }
+
+        return psiVariables[0];
+    }
+
+    //find psiElement of nodes
     public static void matchNodeAndPsiClass(Project project,Node node) {
             String classNameAndMethodName = node.getClassNameAndMethodName();
-            if(classNameAndMethodName.equals("org.apache.maven.surefire.api.report.RunMode.segmentsToRunModes()Ljava/util/Map;")){
-                System.out.println(classNameAndMethodName);
-            }
+
             int leftExpansion = classNameAndMethodName.indexOf('(');
             int rightExpansion = classNameAndMethodName.indexOf(')');
             String paramsRaw = classNameAndMethodName.substring(leftExpansion, rightExpansion + 1).replace("/",".").replace("$",".");
@@ -114,7 +204,6 @@ public class PsiUtils {
                 }
 
                 psiClass=getPsiClassByName(project,node_PackageClassName);
-
                 if(node_MethodName.equals("-init-")  || node_MethodName.equals("-clinit-")){
                     node.setPsiElement(psiClass);
                     node.setPackageClassName(node_PackageClassName);
@@ -153,22 +242,22 @@ public class PsiUtils {
 
                 }
                 //todo
-                List<PsiClass> anonymousClasses=findAnonymousClasses(psiClass);
+                List<PsiAnonymousClass> anonymousClasses=findAnonymousClasses(psiClass);
+                int anonymousIndex=Integer.parseInt(classes[2])-1;
 
-                for (PsiClass clazz : anonymousClasses) {
-                    for (PsiMethod method : clazz.getMethods()) {
+                for (PsiMethod method : anonymousClasses.get(anonymousIndex).getMethods()) {
 
-                        if (method.getName().equals(node_MethodName)) {
+                    if (method.getName().equals(node_MethodName)) {
 
-                            if (paramsRaw.equals(getParamsStringFromPsi(method))) {
-                                node.setPsiElement(method);
-                                node.setPackageClassName(node_PackageClassName);
-                                return;
-                            }
+                        if (paramsRaw.equals(getParamsStringFromPsi(method))) {
+                            node.setPsiElement(method);
+                            node.setPackageClassName(node_PackageClassName);
+                            return;
                         }
                     }
                 }
             }
+
 
 
     }
@@ -179,6 +268,8 @@ public class PsiUtils {
     private static boolean isLetter(char c){
         return c!='$' && !isDigit(c);
     }
+
+    //Finite State Machine
     public static String[] analyzeClassName(String className){
         StringBuilder[] stringBuilders=new StringBuilder[3];
         stringBuilders[0]=new StringBuilder();//class
@@ -292,28 +383,20 @@ public class PsiUtils {
         return result;
     }
     public static PsiClass getPsiClassByName(Project project, String cls) {
-        GlobalSearchScope searchScope = GlobalSearchScope.allScope(project);
+        GlobalSearchScope searchScope = GlobalSearchScope.everythingScope(project);
         JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
         return javaPsiFacade.findClass(cls, searchScope);
     }
 
-    public static List<PsiClass> findAnonymousClasses(PsiClass cls){
+    public static List<PsiAnonymousClass> findAnonymousClasses(PsiClass cls){
 
         PsiElement[] classes = PsiTreeUtil.collectElements(cls, new PsiElementFilter() {
             public boolean isAccepted(PsiElement e) {
                 return (e instanceof PsiAnonymousClass) && cls.equals(PsiTreeUtil.getParentOfType(e, PsiClass.class));
             }
         });
-        return Arrays.stream(classes).map(e->((PsiClass)e)).collect(Collectors.toList());
+        return Arrays.stream(classes).map(e->((PsiAnonymousClass)e)).collect(Collectors.toList());
     }
-
-    /*
-       org.apache.maven.plugin.surefire.SurefireHelper.createErrorMessage
-       (Lorg/apache/maven/plugin/surefire/SurefireReportParameters;Lorg/apache/maven/surefire/api/suite/RunResult;Ljava/lang/Exception;)
-       Ljava/lang/String;
-        *
-      */
-
 
 
 

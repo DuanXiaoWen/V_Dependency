@@ -56,10 +56,12 @@ public class Graph {
             nodeB.addInEdge(edge);
             idNodeMap.put(nodeB.get_id(),nodeB);
         }
+
         edges.add(edge);
 
 
     }
+
 
 
     public Map<String, Node> getIdNodeMap() {

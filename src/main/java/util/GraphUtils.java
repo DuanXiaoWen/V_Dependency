@@ -1,13 +1,13 @@
 package util;
 
 import com.google.common.collect.Maps;
-import com.intellij.psi.PsiElement;
+
 import guru.nidi.graphviz.attribute.RankDir;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.MutableNode;
-import org.codehaus.plexus.util.CollectionUtils;
+
 import toolWindow.LocalToolWindow.Graph;
 import toolWindow.LocalToolWindow.entity.BlueprintTuple;
 import toolWindow.LocalToolWindow.entity.Edge;
@@ -15,7 +15,7 @@ import toolWindow.LocalToolWindow.entity.Node;
 
 import java.awt.geom.Point2D;
 import java.util.*;
-import java.util.function.Supplier;
+
 import java.util.stream.Collectors;
 
 import static guru.nidi.graphviz.model.Factory.mutGraph;
@@ -145,16 +145,9 @@ public class GraphUtils {
         }
         // construct the GraphViz graph
         MutableGraph gvGraph = mutGraph("test")
-                .setDirected(true)
                 .graphAttrs()
                 .add(RankDir.LEFT_TO_RIGHT);
 
-        for(Node node:graph.getNodes()){
-            if(node.getPsiElement()==null){
-                System.out.println(node.getClassNameAndMethodName());
-            }
-        }
-        System.out.println();
 
         graph.getNodes().stream().sorted((o1, o2) -> o1.getMethodName().compareTo(o2.getMethodName()))
                 .forEach(node->{

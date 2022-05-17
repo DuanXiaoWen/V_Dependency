@@ -12,6 +12,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import service.GraphDataMaker;
+import toolWindow.LocalToolWindow.entity.Access;
 import toolWindow.LocalToolWindow.entity.Edge;
 import toolWindow.LocalToolWindow.entity.Node;
 import util.PsiUtils;
@@ -135,10 +136,9 @@ public class LocalToolWindow {
                                         String resultDB=PropertiesComponent.getInstance(project).getValue(VDProperties.SelectedModule.toString())+
                                                 PropertiesComponent.getInstance(project).getValue(VDProperties.ResultDatabaseName.toString());
 
-                                        graphDataMaker.run(sourceDB,resultDB);
-
+//                                        graphDataMaker.run(sourceDB,resultDB);
                                         List<Edge> edgeList=graphDataMaker.queryEdges(resultDB);
-                                        System.out.println(edgeList.size());
+
                                         Graph graph=PsiUtils.buildGraph(project,edgeList);
                                         canvas.reset(graph);
                                         setupUiAfterRun();
@@ -226,4 +226,6 @@ public class LocalToolWindow {
     public JComponent getContent(){
         return this.content;
     }
+
+
 }

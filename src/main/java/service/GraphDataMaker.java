@@ -2,6 +2,7 @@ package service;
 
 
 
+import com.intellij.psi.PsiClass;
 import toolWindow.LocalToolWindow.entity.Access;
 import toolWindow.LocalToolWindow.entity.CallResult;
 import toolWindow.LocalToolWindow.entity.Edge;
@@ -392,7 +393,8 @@ public class GraphDataMaker {
     public List<Edge> queryEdges(String dbName) throws SQLException {
         Connection conn = SQLiteUtils.connectDB(dbName);
         Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT methodA, methodB, accessType, classField from edge");
+//        ResultSet rs = stmt.executeQuery("SELECT methodA, methodB, accessType, classField from edge");
+        ResultSet rs = stmt.executeQuery("SELECT nodeA, nodeB, accessType, classField from edge");
         List<Edge> res = new ArrayList<>();
         Map<String, Edge> edges = new HashMap<>();
 
@@ -433,23 +435,37 @@ public class GraphDataMaker {
 
     public void run(String sourceDatabasePath, String resultDatabasePath) throws SQLException {
 
-//        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
-//
-//        Map<String, Map<String, String>> fieldData = fieldDataGenerate(sourceDatabasePath);
-//
-//        List<String> nodes = new ArrayList<>();
-//
-//        List<CallResult> dataAccessResult = outerDataAccess(resultDatabasePath, fieldData, nodes);
-//
-//        generateEdge(resultDatabasePath,dataAccessResult);
+        createCallGraphResultDB(sourceDatabasePath,resultDatabasePath);
+
+        Map<String, Map<String, String>> fieldData = fieldDataGenerate(sourceDatabasePath);
+
+        List<String> nodes = new ArrayList<>();
+
+        List<CallResult> dataAccessResult = outerDataAccess(resultDatabasePath, fieldData, nodes);
+
+        generateEdge(resultDatabasePath,dataAccessResult);
     }
 
-//    public static void main(String[] args) throws SQLException {
-//        GraphDataMaker maker = new GraphDataMaker();
-//
-//        maker.run("/home/kyriepotreler/Projects/maven-surefire/maven-surefire-plugin/TotalData.db",
-//                "/home/kyriepotreler/Projects/maven-surefire/maven-surefire-plugin/callGraphResult.db");
-//    }
+    public static void main(String[] args) {
+
+        GraphDataMaker graphDataMaker=new GraphDataMaker();
+        List<Edge> edgeList= null;
+        try {
+            edgeList = graphDataMaker.queryEdges("/home/kyriepotreler/Projects/maven-surefire/maven-surefire-common/callGraphResult.db");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        assert edgeList != null;
+        for(Edge edge:edgeList){
+
+            for(Access access:edge.getAccessList()){
+                System.out.println(access.getAccessType());
+                System.out.println(access.getClassSignatureAndFieldName());
+            }
+            System.out.println();
+
+        }
+    }
 
 
 }
