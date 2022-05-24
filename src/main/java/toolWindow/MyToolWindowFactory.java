@@ -43,13 +43,20 @@ public class MyToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-//        WebToolWindow myToolWindow=new WebToolWindow(toolWindow);
-        LocalToolWindow myToolWindow=new LocalToolWindow(toolWindow,project);
         ContentFactory contentFactory=ContentFactory.SERVICE.getInstance();
-        Content content= contentFactory.createContent(myToolWindow.getContent(),"",false);
+        Content content= contentFactory.createContent(new LocalToolWindow(toolWindow,project).getContent(),"",false);
         toolWindow.getContentManager().addContent(content);
-//        System.out.println("createContent!");
     }
+
+
+
+//    @Override
+//    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+//        WebToolWindow myToolWindow=new WebToolWindow(toolWindow);
+//        ContentFactory contentFactory=ContentFactory.SERVICE.getInstance();
+//        Content content= contentFactory.createContent(myToolWindow.getContent(),"",false);
+//        toolWindow.getContentManager().addContent(content);
+//    }
 
 
     @Override

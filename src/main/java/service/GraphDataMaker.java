@@ -83,9 +83,6 @@ public class GraphDataMaker {
                     dataAccessRows.add(singleRow);
                 }
 
-//                if (!classMethods.contains(caller)) {
-//                    classMethods.add(caller);
-//                }
 
             }
 
@@ -259,8 +256,6 @@ public class GraphDataMaker {
             String fName = null;
             String fHashCode = null;
 
-//            String dbCommand = "insert into callGraph values";
-//            int commendCount = 0;
 
             while(rs.next()) {
                 String type = rs.getString(1);

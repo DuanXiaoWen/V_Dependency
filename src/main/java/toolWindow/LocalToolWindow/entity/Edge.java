@@ -1,5 +1,7 @@
 package toolWindow.LocalToolWindow.entity;
 
+import com.intellij.ide.util.PropertiesComponent;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;

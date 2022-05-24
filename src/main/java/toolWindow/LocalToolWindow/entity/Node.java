@@ -99,13 +99,20 @@ public  class Node{
         this._id = _id;
         this.classNameAndMethodName = classNameAndMethodName;
     }
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public String getMethodName() {
         return methodName;
     }
     public String getSignature() {
         return signature;
     }
-
     public Point2D.Float getRawLayoutPoint() {
         return rawLayoutPoint;
     }
@@ -118,8 +125,10 @@ public  class Node{
     String classNameAndMethodName;
     PsiElement psiElement;
     String methodName;
+    String note;
     Set<Edge> inEdges=new HashSet<>();
     Set<Edge> outEdges=new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

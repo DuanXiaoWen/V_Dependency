@@ -29,6 +29,8 @@ public class Graph {
     }
 
 //
+
+
     public void addEdge(Project project,Edge edge){
         Node nodeA=edge.getNodeA();
         Node nodeB=edge.getNodeB();
@@ -56,10 +58,7 @@ public class Graph {
             nodeB.addInEdge(edge);
             idNodeMap.put(nodeB.get_id(),nodeB);
         }
-
         edges.add(edge);
-
-
     }
 
 
@@ -91,16 +90,15 @@ public class Graph {
                 .filter(e->!e.isEmpty())
                 .map( e->{
                     Map<String,Node> subIdNodeMap=new HashMap<>();
-
                     idNodeMap.forEach((k,v)->{
                         if(e.contains(v)){
                             subIdNodeMap.put(k,v);
                         }
                     });
-                    Set<Edge> subEdges=edges.stream().filter(it->e.contains(it.getNodeA()) || e.contains(it.getNodeB())).collect(Collectors.toSet());
+                    Set<Edge> subEdges=edges.stream().filter(it->e.contains(it.getNodeA()) ||
+                            e.contains(it.getNodeB())).collect(Collectors.toSet());
                     return new Graph(subIdNodeMap,subEdges);
                 }).collect(Collectors.toSet());
-
     }
 
 

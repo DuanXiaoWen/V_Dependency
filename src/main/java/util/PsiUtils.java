@@ -141,9 +141,7 @@ public class PsiUtils {
                 PsiElement element = anonymousClasses.get(anonymousIndex).getScope();
                 String finalFieldName = fieldName;
                 element.accept(new JavaRecursiveElementVisitor() {
-
                     private PsiLocalVariable psiLocalVariable;
-
                     @Override
                     public void visitLocalVariable(PsiLocalVariable variable) {
                         super.visitLocalVariable(variable);
@@ -151,7 +149,6 @@ public class PsiUtils {
                             psiLocalVariable = variable;
                             psiVariables[0] =  psiLocalVariable;
                         }
-
                     }
                 });
                 if(psiVariables[0]==null){
@@ -161,7 +158,6 @@ public class PsiUtils {
                             return psiVariables[0];
                         }
                     }
-
                 }
 
 
@@ -239,7 +235,6 @@ public class PsiUtils {
                     psiClass = getPsiClassByName(project, node_PackageClassName);
 
 
-
                 }
                 //todo
                 List<PsiAnonymousClass> anonymousClasses=findAnonymousClasses(psiClass);
@@ -282,11 +277,8 @@ public class PsiUtils {
 
             switch (state){
                 case 1:
-                    if(cur=='$'){
-                        state=2;
-                    }else {
-                        stringBuilders[0].append(cur);
-                    }
+                    if(cur=='$') state=2;
+                    else stringBuilders[0].append(cur);
                     break;
                 case 2:
                     if(isDigit(cur)){
@@ -299,18 +291,12 @@ public class PsiUtils {
                     }
                     break;
                 case 3:
-                    if(cur=='$'){
-                        state=2;
-                    }else {
-                        stringBuilders[1].append(cur);
-                    }
+                    if(cur=='$') state=2;
+                    else stringBuilders[1].append(cur);
                     break;
                 case 4:
-                    if(isDigit(cur)){
-                        stringBuilders[2].append(cur);
-                    }else {
-                        System.err.println(className);
-                    }
+                    if(isDigit(cur)) stringBuilders[2].append(cur);
+                    else System.err.println(className);
                 default:
                     stringBuilders[0].append(cur);
             }
@@ -389,7 +375,6 @@ public class PsiUtils {
     }
 
     public static List<PsiAnonymousClass> findAnonymousClasses(PsiClass cls){
-
         PsiElement[] classes = PsiTreeUtil.collectElements(cls, new PsiElementFilter() {
             public boolean isAccepted(PsiElement e) {
                 return (e instanceof PsiAnonymousClass) && cls.equals(PsiTreeUtil.getParentOfType(e, PsiClass.class));

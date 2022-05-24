@@ -16,7 +16,7 @@ public class MouseEventHandler implements MouseListener, MouseMotionListener, Mo
     public void mouseClicked(MouseEvent e) {
         Node node = this.canvas.getNodeUnderPoint(e.getPoint());
         if (node == null) {
-            this.canvas.clearClickedNodes();
+            this.canvas.resetFocus();
         } else {
             this.canvas.toggleClickedNode(node);
         }

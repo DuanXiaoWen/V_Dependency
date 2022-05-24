@@ -23,15 +23,14 @@ import static guru.nidi.graphviz.model.Factory.mutNode;
 
 
 public class GraphUtils {
-    private static final float normalizedGridSize = 0.1f;
+    private static final float uniformGridScale = 0.1f;
 
     public static void layout(Graph graph) {
         // get sub graphs from the graph, and render each part separately
         List<Map<String, Point2D.Float>> subGraphBlueprints = graph.getSubGraphs().stream()
                 .map(GraphUtils::getLayoutFromGraphViz)
-                .map(GraphUtils::normalizeBlueprintGridSize)
+                .map(GraphUtils::UniteSubGraphScale)
                 .collect(Collectors.toList());
-
 
         // merge all sub graphs to a single graph, then adjust node coordinates so they fit in the view
         Map<String, Point2D.Float> mergedBlueprint = mergeNormalizedLayouts(subGraphBlueprints);
@@ -50,8 +49,7 @@ public class GraphUtils {
         if (blueprints.isEmpty()) {
             return new HashMap<>();
         }
-
-
+        //get subgraphs' height and widths
         List<BlueprintTuple> blueprintTuples = blueprints.stream()
                 .map(blueprint -> {
                     List<Float> xPoints = blueprint.values().stream().map(e -> e.x).collect(Collectors.toList());
@@ -63,18 +61,20 @@ public class GraphUtils {
                     Point2D.Float max = new Point2D.Float(maxOfXPoints, maxOfYPoints);
                     Point2D.Float min = new Point2D.Float(minOfXPoints, minOfYPoints);
 
-                    float width = max.x - min.x + normalizedGridSize;
-                    float height = max.y - min.y + normalizedGridSize;
+                    float width = max.x - min.x + uniformGridScale;
+                    float height = max.y - min.y + uniformGridScale;
                     return new BlueprintTuple(blueprint, height, width);
 
                 })
                 .collect(Collectors.toList());
 
+        //subgraphs' height sorted from higher to lower
         List<Float> sortedHeights = blueprintTuples.stream()
                 .map(BlueprintTuple::getHeight)
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
 
+        //subgraph sorted by height from high to low, then by width from fat to thin
         List<Map<String, Point2D.Float>> sortedBlueprints = blueprintTuples.stream()
                 .sorted(Comparator.comparing((BlueprintTuple bp) -> -bp.getHeight())
                         .thenComparing((BlueprintTuple bp) -> -bp.getWidth()))
@@ -87,7 +87,6 @@ public class GraphUtils {
                 .min((o1, o2) -> (int) (o1.x-o2.x))
                 .orElseGet(() -> new Point2D.Float(0f,0f))
                 .y;
-
         float yOffset=0;
         
         for(int i = 0; i<sortedBlueprints.size(); i++){
@@ -114,7 +113,7 @@ public class GraphUtils {
         return res;
 
     }
-    private static Point2D.Float getGridSize(Map<String, Point2D.Float> blueprint){
+    private static Point2D.Float computeGridScale(Map<String, Point2D.Float> blueprint){
         int precisionFactor = 1000;
         Set<Integer> xUniqueValues = blueprint.values().stream()
                 .map(e -> Math.round(precisionFactor * e.x))
@@ -148,7 +147,6 @@ public class GraphUtils {
                 .graphAttrs()
                 .add(RankDir.LEFT_TO_RIGHT);
 
-
         graph.getNodes().stream().sorted((o1, o2) -> o1.getMethodName().compareTo(o2.getMethodName()))
                 .forEach(node->{
                     MutableNode gvNode = mutNode(node.get_id());
@@ -156,10 +154,13 @@ public class GraphUtils {
                             .map(Edge::getNodeB)
                             .sorted((o1, o2) -> o1.getMethodName().compareTo(o2.getMethodName()))
                             .forEach(it-> gvNode.addLink(it.get_id()));
+                    node.getInEdges().stream()
+                            .map(Edge::getNodeA)
+                            .sorted((o1, o2) -> o1.getMethodName().compareTo(o2.getMethodName()))
+                            .forEach(it-> gvNode.addLink(it.get_id()));
                     gvGraph.add(gvNode);
 
         });
-
 
         // parse the GraphViz layout as a mapping from "node name" to "x-y coordinate (percent of full graph size)"
         // GraphViz doc: https://graphviz.gitlab.io/_pages/doc/info/output.html#d:plain
@@ -169,18 +170,15 @@ public class GraphUtils {
                 .map(e->e.split(" "))
                 .forEach(e->res.put(e[1],new Point2D.Float(Float.parseFloat(e[2]),Float.parseFloat(e[3]))));
         return res;
-
     }
-    private static Map<String, Point2D.Float>  normalizeBlueprintGridSize(Map<String, Point2D.Float> blueprint){
-        if (blueprint.size() < 2) {
-            return blueprint;
+    private static Map<String, Point2D.Float> UniteSubGraphScale(Map<String, Point2D.Float> subGraphLayout){
+        if (subGraphLayout.size() < 2) {
+            return subGraphLayout;
         }
-        Point2D.Float gridSize = getGridSize(blueprint);
-        Point2D.Float desiredGridSize = new Point2D.Float(normalizedGridSize, normalizedGridSize);
-        float xFactor = (gridSize.x == 0f) ? 1f : desiredGridSize.x / gridSize.x;
-        float yFactor = (gridSize.y == 0f) ? 1f : desiredGridSize.y / gridSize.y;
-        return Maps.transformValues(blueprint, aFloat -> new Point2D.Float(aFloat.x*xFactor,aFloat.y*yFactor));
-
+        Point2D.Float gridScale = computeGridScale(subGraphLayout);
+        Point2D.Float UniformGridScale = new Point2D.Float(uniformGridScale, uniformGridScale);
+        float xFactor = (gridScale.x == 0f) ? 1f : UniformGridScale.x / gridScale.x;
+        float yFactor = (gridScale.y == 0f) ? 1f : UniformGridScale.y / gridScale.y;
+        return Maps.transformValues(subGraphLayout, aFloat -> new Point2D.Float(aFloat.x*xFactor,aFloat.y*yFactor));
     }
-
 }

@@ -30,24 +30,13 @@ public class CallToolWindowAction extends AnAction {
 
 
   public CallToolWindowAction() {
-    super();
   }
-
-  //dynamically add menu action
-  public CallToolWindowAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
-    super(text, description, icon);
-  }
-
-
 
   private void registerProperties(Project project){
     PropertiesComponent.getInstance(project).setValue(VDProperties.SourceDatabaseName.toString(),"TotalData.db");
     PropertiesComponent.getInstance(project).setValue(VDProperties.ResultDatabaseName.toString(), "callGraphResult.db");
     PropertiesComponent.getInstance(project).setValue(VDProperties.NodeDatabaseName.toString(), "node.db");
     PropertiesComponent.getInstance(project).setValue(VDProperties.EdgeDatabaseName.toString(), "edge.db");
-
-
-
   }
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
