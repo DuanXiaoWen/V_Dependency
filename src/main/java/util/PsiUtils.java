@@ -274,7 +274,6 @@ public class PsiUtils {
         int state=1;
         for(int i=0;i<className.length();i++){
             char cur=className.charAt(i);
-
             switch (state){
                 case 1:
                     if(cur=='$') state=2;

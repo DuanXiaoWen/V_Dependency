@@ -86,19 +86,17 @@ public class Graph {
 
     public Set<Graph> getSubGraphs(){
         Set<Node> visitedNodes=new HashSet<>();
-        return  this.getNodes().stream().map(e->traverseBfs(e,visitedNodes))
+        return  this.getNodes().stream()
+                .map(e->traverseBfs(e,visitedNodes))
                 .filter(e->!e.isEmpty())
                 .map( e->{
-                    Map<String,Node> subIdNodeMap=new HashMap<>();
-                    idNodeMap.forEach((k,v)->{
-                        if(e.contains(v)){
-                            subIdNodeMap.put(k,v);
-                        }
-                    });
-                    Set<Edge> subEdges=edges.stream().filter(it->e.contains(it.getNodeA()) ||
-                            e.contains(it.getNodeB())).collect(Collectors.toSet());
+                    Map<String,Node> subIdNodeMap = e.stream().collect(Collectors.toMap(Node::get_id, n->n));
+                    Set<Edge> subEdges=edges.stream()
+                            .filter(it->e.contains(it.getNodeA()) || e.contains(it.getNodeB()))
+                            .collect(Collectors.toSet());
                     return new Graph(subIdNodeMap,subEdges);
-                }).collect(Collectors.toSet());
+                })
+                .collect(Collectors.toSet());
     }
 
 

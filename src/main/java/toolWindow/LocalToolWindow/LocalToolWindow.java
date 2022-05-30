@@ -186,8 +186,13 @@ public class LocalToolWindow {
                 enableFocusedNodeButtons();
             } else {
                 //already focus on a node
-                selectedEdge = getSelectededEdge(node);
-                showEdgeInfo(selectedEdge);
+                if(!focusedNode.getNeighbors().contains(node)){
+                    focusedNode=node;
+                    enableFocusedNodeButtons();
+                }else {
+                    selectedEdge = getSelectededEdge(node);
+                    showEdgeInfo(selectedEdge);
+                }
             }
         }
         return this;
